@@ -3,11 +3,9 @@
 # Copyright (c) 2010-2013 Raphaël Barrois
 # This software is distributed under the two-clause BSD license.
 
-from __future__ import unicode_literals
-
 import codecs
-import re
 import os
+import re
 
 from setuptools import setup
 
@@ -34,7 +32,7 @@ setup(
     description="Wrapper around low-level FS-related calls, with support for advanced FS stacking",
     long_description=''.join(codecs.open('README.rst', 'r', 'utf-8').readlines()),
     author="Raphaël Barrois",
-    author_email="raphael.barrois+fslib@polytechnique.org",
+    author_email="raphael.barrois+%s@polytechnique.org" % PACKAGE,
     license="BSD",
     keywords=["FS", "FileSystem", "UnionFS", "os"],
     url="https://github.com/rbarrois/%s/" % PACKAGE,
