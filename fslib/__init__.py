@@ -6,5 +6,5 @@ __version__ = '0.2.0'
 __author__ = 'Raphaël Barrois <raphael.barrois+fslib@polytechnique.org>'
 
 
-from .base import FileSystem, OSFS
+from .base import FileSystem, OSFS, ROOT
 from .exceptions import FSError
