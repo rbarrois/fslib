@@ -2,8 +2,6 @@
 # Copyright (c) 2010-2013 Raphaël Barrois
 # This software is distributed under the two-clause BSD license.
 
-from __future__ import absolute_import, unicode_literals
-
 import hashlib
 import io
 import os
@@ -15,11 +13,11 @@ from . import helpers
 ROOT = '/'
 
 
-class FileSystem(object):
+class FileSystem:
     """Abstraction layer around ``import os``.
     """
     def __init__(self, backend, files_encoding='utf-8', **kwargs):
-        super(FileSystem, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.files_encoding = files_encoding
         self.backend = backend
 
@@ -163,7 +161,7 @@ class FileSystem(object):
             return self.backend.unlink(path)
 
 
-class BaseFS(object):
+class BaseFS:
     """A filesystem backend.
 
     Handles low-level directives (access, stat, chmod, etc.).
@@ -171,7 +169,7 @@ class BaseFS(object):
 
     def __init__(self, default_umask=None, default_uid=None, default_gid=None,
             **kwargs):
-        super(BaseFS, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         if default_umask is None:
             default_umask = helpers.get_active_umask()
         if default_uid is None:
@@ -399,7 +397,7 @@ class OSFS(BaseFS):
     """Actual filesystem backend."""
 
     def __init__(self, mapped_root=ROOT, path_encoding='utf-8', **kwargs):
-        super(OSFS, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.mapped_root = mapped_root
         self.path_encoding = path_encoding
 
@@ -407,7 +405,7 @@ class OSFS(BaseFS):
         return '<OSFS: %r (%s)>' % (self.mapped_root, self.path_encoding)
 
     def convert_path_in(self, path):
-        path = super(OSFS, self).convert_path_in(path[len(ROOT):])
+        path = super().convert_path_in(path[len(ROOT):])
         assert helpers.is_parent(ROOT, path)
 
         return os.path.join(self.mapped_root, path)
@@ -415,7 +413,7 @@ class OSFS(BaseFS):
     def convert_path_out(self, path):
         assert helpers.is_parent(self.mapped_root, path)
         relpath = os.path.relpath(path, self.mapped_root)
-        return super(OSFS, self).convert_path_out(os.path.join(ROOT, relpath))
+        return super().convert_path_out(os.path.join(ROOT, relpath))
 
     # Read
     # ----
@@ -485,7 +483,7 @@ class WrappingFS(BaseFS):
 
     def __init__(self, wrapped, **kwargs):
         self.wrapped = wrapped
-        super(WrappingFS, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
     def __repr__(self):
         return '<%s(%r)>' % (self.__class__.__name__, self.wrapped)

@@ -4,8 +4,6 @@
 
 """Common exceptions for fslib."""
 
-from __future__ import absolute_import, unicode_literals
-
 import errno
 
 
@@ -15,7 +13,7 @@ class FSError(OSError):
 
 class DeletedObjectError(OSError):
     def __init__(self, path, **kwargs):
-        super(DeletedObjectError, self).__init__(
+        super().__init__(
             errno.ENOENT,
             "No such file or directory: %r" % path,
             **kwargs

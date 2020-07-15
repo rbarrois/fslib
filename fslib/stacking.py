@@ -5,8 +5,6 @@
 
 """Stacking filesystems."""
 
-from __future__ import absolute_import, unicode_literals
-
 import collections
 import contextlib
 import dbm
@@ -34,7 +32,7 @@ class ChrootFS(base.WrappingFS):
     All paths are converted on the fly.
     """
     def __init__(self, external_root=ROOT, internal_root=ROOT, **kwargs):
-        super(ChrootFS, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.external_root = external_root
         self.internal_root = internal_root
 
@@ -119,7 +117,7 @@ class ReadOnlyFS(base.WrappingFS):
 # ============
 
 
-class BaseWhiteoutCache(object):
+class BaseWhiteoutCache:
     def __contains__(self, key):
         raise NotImplementedError()
 
@@ -183,7 +181,7 @@ class WhiteoutFS(base.WrappingFS):
     )
 
     def __init__(self, whiteout_cache, **kwargs):
-        super(WhiteoutFS, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.whiteout_cache = whiteout_cache
 
     def __del__(self):
@@ -328,7 +326,7 @@ class UnionFS(base.BaseFS):
     )
 
     def __init__(self, strict=False, **kwargs):
-        super(UnionFS, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.strict = strict
         self._branches = {}
         self._sorted_branches = []
@@ -341,7 +339,7 @@ class UnionFS(base.BaseFS):
     def has_feature(self, feature):
         if feature == self.FEATURE_READONLY:
             return not self._write_branches
-        return super(UnionFS, self).has_feature(feature)
+        return super().has_feature(feature)
 
     # Branches management
     # -------------------
@@ -693,7 +691,7 @@ def _has_access(mode, uid, gid, target_mode, target_uid, target_gid):
     return False
 
 
-class FakeFSObject(object):
+class FakeFSObject:
     BASE_ST_MOD = 0
 
     def __init__(self, path, mode, uid, gid):
@@ -761,7 +759,7 @@ class FakeFSObject(object):
     is_symlink = False
 
 
-class BufferWrapper(object):
+class BufferWrapper:
     def __init__(self, buf):
         self._buf = buf
 
@@ -784,7 +782,7 @@ class FakeFile(FakeFSObject):
     is_file = True
 
     def __init__(self, **kwargs):
-        super(FakeFile, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.content = io.BytesIO()
 
     def open_binary(self, mode):
@@ -809,7 +807,7 @@ class FakeDir(FakeFSObject):
     is_dir = True
 
     def __init__(self, **kwargs):
-        super(FakeDir, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.contents = {}
 
     def __contains__(self, path):
@@ -900,7 +898,7 @@ class FakeSymlink(FakeFSObject):
     is_symlink = True
 
     def __init__(self, target, **kwargs):
-        super(FakeSymlink, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.target = target
 
     def stat(self):
@@ -912,7 +910,7 @@ class FakeSymlink(FakeFSObject):
 
 class MemoryFS(base.BaseFS):
     def __init__(self, *args, **kwargs):
-        super(MemoryFS, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fake_root = FakeDir(
             path=ROOT,
             mode=self.default_dir_mode,
@@ -1071,7 +1069,7 @@ class MountFS(base.BaseFS):
         '/bar/baz' on that file-system.
     """
     def __init__(self, **kwargs):
-        super(MountFS, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.filesystems = {}
         self._sorted_filesystems = []
 
