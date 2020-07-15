@@ -35,6 +35,9 @@ class FileSystem:
     def stat(self, path):
         return self.backend.stat(path)
 
+    def lstat(self, path):
+        return self.backend.lstat(path)
+
     def file_exists(self, path):
         """Whether the path exists, and is a file."""
         if not self.backend.access(path, os.F_OK):
@@ -90,6 +93,9 @@ class FileSystem:
             return self.backend.open_binary(path, mode)
         else:
             return self.backend.open_text(path, mode, encoding=encoding or self.files_encoding)
+
+    def readlink(self, path):
+        return self.backend.readlink(path)
 
     # Write
     # -----
