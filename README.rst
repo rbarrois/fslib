@@ -7,7 +7,7 @@ fslib is a wrapper around Python's ``os.*`` low-level functions, aiming to:
 * Merge various physical locations into a simple pseudo-filesystem for the application
 * Handle UnionFS-like features, including transparent write overlay on top of read-only paths
 
-fslib supports Python 2.7 and 3.3+; it requires only the standard Python library.
+fslib supports Python 3.3+; it requires only the standard Python library.
 
 Links
 -----

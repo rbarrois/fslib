@@ -25,14 +25,14 @@ class FileSystem(object):
 
     # Read
     # ----
-    def access(self, path, read=True, write=False):
+    def access(self, path, read=True, write=False, follow=True):
         """Whether a file can be accessed."""
         mode = os.F_OK
         if read:
             mode |= os.R_OK
         if write:
             mode |= os.W_OK
-        return self.backend.access(path, mode)
+        return self.backend.access(path, mode, follow=follow)
 
     def stat(self, path):
         return self.backend.stat(path)
@@ -51,9 +51,9 @@ class FileSystem(object):
         return stat.S_ISDIR(f_stat.st_mode)
 
     def symlink_exists(self, path):
-        if not self.backend.access(path, os.F_OK):
+        if not self.backend.access(path, os.F_OK, follow=False):
             return False
-        f_stat = self.backend.stat(path)
+        f_stat = self.backend.lstat(path)
         return stat.S_ISLNK(f_stat.st_mode)
 
     def read_one_line(self, path, encoding=None):
@@ -121,8 +121,8 @@ class FileSystem(object):
         if relative:
             raise NotImplementedError("Need to implement relative=True.")
 
-        if self.access(link_name, read=False, write=False):
-            file_stat = self.stat(link_name)
+        if self.access(link_name, read=False, write=False, follow=False):
+            file_stat = self.lstat(link_name)
             if not stat.S_ISLNK(file_stat.st_mode) and not force:
                 raise exceptions.EEXIST(link_name)
             elif stat.S_ISDIR(file_stat.st_mode):
@@ -265,10 +265,10 @@ class BaseFS(object):
     # Read
     # ----
 
-    def access(self, path, mode):
-        return self._access(self.convert_path_in(path), mode)
+    def access(self, path, mode, follow=True):
+        return self._access(self.convert_path_in(path), mode, follow=follow)
 
-    def _access(self, path, mode):
+    def _access(self, path, mode, follow=follow):
         """Test whether a path can be accessed in the chosen mode.
 
         The mode should be provided as a os.*_OK combination.
@@ -420,8 +420,8 @@ class OSFS(BaseFS):
     # Read
     # ----
 
-    def _access(self, path, mode):
-        return os.access(path.encode(self.path_encoding), mode)
+    def _access(self, path, mode, follow=True):
+        return os.access(path.encode(self.path_encoding), mode, follow_symlinks=follow)
 
     def _listdir(self, path):
         return [
@@ -493,8 +493,8 @@ class WrappingFS(BaseFS):
     # Reading
     # -------
 
-    def _access(self, path, mode):
-        return self.wrapped.access(path, mode)
+    def _access(self, path, mode, follow=True):
+        return self.wrapped.access(path, mode, follow=follow)
 
     def _listdir(self, path):
         return self.wrapped.listdir(path)

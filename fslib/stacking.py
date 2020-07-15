@@ -64,10 +64,10 @@ class ReadOnlyFS(base.WrappingFS):
     # Read
     # ----
 
-    def _access(self, path, mode):
+    def _access(self, path, mode, follow=True):
         if mode & os.W_OK:
             return False
-        return self.wrapped.access(path, mode)
+        return self.wrapped.access(path, mode, follow=follow)
 
     # def _listdir: unchanged
     # def _lstat: unchanged
@@ -222,7 +222,7 @@ class WhiteoutFS(base.WrappingFS):
     # Read
     # ----
 
-    def _access(self, path, mode):
+    def _access(self, path, mode, follow=True):
         try:
             self._check_path(path)
         except OSError as e:
@@ -231,7 +231,7 @@ class WhiteoutFS(base.WrappingFS):
             else:
                 raise
 
-        return self.wrapped.access(path, mode)
+        return self.wrapped.access(path, mode, follow=follow)
 
     def _listdir(self, path):
         with self._manage_whiteout(path, for_creation=False):
@@ -548,7 +548,7 @@ class UnionFS(base.BaseFS):
     # Read
     # ----
 
-    def _access(self, path, mode):
+    def _access(self, path, mode, follow=True):
         try:
             branch, _stats = self._get_read_branch(path)
         except OSError as e:
@@ -556,7 +556,7 @@ class UnionFS(base.BaseFS):
                 return False
             # Worse!
             raise
-        return branch.fs.access(path, mode)
+        return branch.fs.access(path, mode, follow=follow)
 
     def _get_dir_branches(self, path):
         """Fetch the list of branches where a directory exists."""
@@ -948,9 +948,9 @@ class MemoryFS(base.BaseFS):
     # Read
     # ----
 
-    def _access(self, path, mode):
+    def _access(self, path, mode, follow=True):
         try:
-            target = self._get(path)
+            target = self._get(path, follow_symlinks=follow)
         except KeyError:
             return False
         return target.access(mode)
@@ -1154,9 +1154,9 @@ class MountFS(base.BaseFS):
     # Read
     # ----
 
-    def _access(self, path, mode):
+    def _access(self, path, mode, follow=True):
         relpath, subfs = self._map_path(path)
-        return subfs.access(relpath, mode)
+        return subfs.access(relpath, mode, follow=follow)
 
     def _listdir(self, path):
         relpath, subfs = self._map_path(path)
