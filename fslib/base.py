@@ -438,7 +438,7 @@ class OSFS(BaseFS):
         return os.lstat(path.encode(self.path_encoding))
 
     def _readlink(self, path):
-        return os.readlink(path.encode(self.path_encoding))
+        return os.readlink(path.encode(self.path_encoding)).decode(self.path_encoding)
 
     def _stat(self, path):
         return os.stat(path.encode(self.path_encoding))
