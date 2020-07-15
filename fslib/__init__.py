@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2011-2013 Raphaël Barrois
+# Copyright (c) 2011-2020 Raphaël Barrois
 # This code is distributed under the two-clause BSD License.
 
-__version__ = '0.2.1'
+__version__ = '0.3.0'
 __author__ = 'Raphaël Barrois <raphael.barrois+fslib@polytechnique.org>'
 
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2010-2013 Raphaël Barrois
+# Copyright (c) 2010-2020 Raphaël Barrois
 # This software is distributed under the two-clause BSD license.
 
 from . import stacking
