@@ -298,7 +298,7 @@ class BaseFS:
         raise NotImplementedError()
 
     def readlink(self, path):
-        return self._readlink(self.convert_path_in(path))
+        return self.convert_path_out(self._readlink(self.convert_path_in(path)))
 
     def _readlink(self, path):
         raise NotImplementedError()
