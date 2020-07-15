@@ -13,5 +13,3 @@ def make_memory_fake(**common_flags):
         wrapped=memory_fs,
     )
     return whiteout_fs
-
-

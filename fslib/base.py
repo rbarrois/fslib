@@ -89,8 +89,7 @@ class FileSystem:
         if 'b' in mode:
             return self.backend.open_binary(path, mode)
         else:
-            return self.backend.open_text(path, mode,
-                encoding=encoding or self.files_encoding)
+            return self.backend.open_text(path, mode, encoding=encoding or self.files_encoding)
 
     # Write
     # -----
@@ -167,8 +166,7 @@ class BaseFS:
     Handles low-level directives (access, stat, chmod, etc.).
     """
 
-    def __init__(self, default_umask=None, default_uid=None, default_gid=None,
-            **kwargs):
+    def __init__(self, default_umask=None, default_uid=None, default_gid=None, **kwargs):
         super().__init__(**kwargs)
         if default_umask is None:
             default_umask = helpers.get_active_umask()
@@ -266,7 +264,7 @@ class BaseFS:
     def access(self, path, mode, follow=True):
         return self._access(self.convert_path_in(path), mode, follow=follow)
 
-    def _access(self, path, mode, follow=follow):
+    def _access(self, path, mode, follow=True):
         """Test whether a path can be accessed in the chosen mode.
 
         The mode should be provided as a os.*_OK combination.
@@ -279,8 +277,10 @@ class BaseFS:
         raise NotImplementedError()
 
     def listdir(self, path):
-        return [self.convert_path_out(rpath)
-            for rpath in self._listdir(self.convert_path_in(path))]
+        return [
+            self.convert_path_out(rpath)
+            for rpath in self._listdir(self.convert_path_in(path))
+        ]
 
     def _listdir(self, path):
         raise NotImplementedError()

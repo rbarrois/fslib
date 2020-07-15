@@ -35,5 +35,3 @@ ENOENT = OSErrorWrapper(errno.ENOENT, "No such file or directory")
 ENOTDIR = OSErrorWrapper(errno.ENOTDIR, "Not a directory")
 ENOTEMPTY = OSErrorWrapper(errno.ENOTEMPTY, "Directory not empty")
 EROFS = OSErrorWrapper(errno.EROFS, "Read-only file system")
-
-

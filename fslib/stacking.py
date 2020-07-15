@@ -475,8 +475,7 @@ class UnionFS(base.BaseFS):
                 branch.fs.mkdir(component)
                 self._copy_stat(component, branch, old_stat)
 
-    def _copy_object(self, path, target_branch, old_branch,
-            for_overwrite=False):
+    def _copy_object(self, path, target_branch, old_branch, for_overwrite=False):
 
         old_stat = old_branch.fs.lstat(path)
         if stat.S_ISDIR(old_stat.st_mode):
@@ -505,8 +504,7 @@ class UnionFS(base.BaseFS):
     _EXIST_YES = 'yes'
     _EXIST_NO = 'no'
 
-    def _copy_on_write(self, target_path, branch,
-            expected=_EXIST_ANY, for_overwrite=False):
+    def _copy_on_write(self, target_path, branch, expected=_EXIST_ANY, for_overwrite=False):
         # 1. Ensure the parent dir is valid somewhere
         parent = os.path.dirname(target_path)
         if not self.isdir(parent):
@@ -669,8 +667,7 @@ class UnionFS(base.BaseFS):
         return branch.fs.rmdir(path)
 
     def _unlink(self, path):
-        branch = self._get_write_branch(path,
-            expected=self._EXIST_YES, for_overwrite=True)
+        branch = self._get_write_branch(path, expected=self._EXIST_YES, for_overwrite=True)
         return branch.fs.unlink(path)
 
 
@@ -796,7 +793,6 @@ class FakeFile(FakeFSObject):
         return io.TextIOWrapper(BufferWrapper(self.content), encoding=encoding)
 
 
-
 class FakeDir(FakeFSObject):
     """A fake directory.
 
@@ -857,11 +853,7 @@ class FakeDir(FakeFSObject):
             raise exceptions.EACCES(full_path)
         if self.mode & stat.S_ISGID:
             gid = self.gid
-        new_link = FakeSymlink(target,
-            mode=mode,
-            uid=uid,
-            gid=gid,
-        )
+        new_link = FakeSymlink(target, mode=mode, uid=uid, gid=gid)
         self.contents[relative_path] = new_link
         return new_link
 
@@ -981,7 +973,8 @@ class MemoryFS(base.BaseFS):
             if helpers.is_readonly_open_mode(mode):
                 raise exceptions.ENOENT(path)
             parent = self._get_parent(path)
-            target = parent.make_file(os.path.basename(path),
+            target = parent.make_file(
+                os.path.basename(path),
                 mode=self.default_file_mode,
                 uid=self.default_uid,
                 gid=self.default_gid,
@@ -1016,7 +1009,8 @@ class MemoryFS(base.BaseFS):
         if path in parent:
             raise exceptions.EEXIST(link_name)
 
-        new_link = parent.make_symlink(path, target,
+        new_link = parent.make_symlink(
+            path, target,
             mode=self.default_symlink_mode,
             uid=self.default_uid,
             gid=self.default_gid,
@@ -1026,7 +1020,8 @@ class MemoryFS(base.BaseFS):
 
     def _mkdir(self, path):
         parent = self._get_parent(path)
-        new_dir = parent.make_subdir(os.path.basename(path),
+        new_dir = parent.make_subdir(
+            os.path.basename(path),
             mode=self.default_dir_mode,
             uid=self.default_uid,
             gid=self.default_gid,
@@ -1202,8 +1197,10 @@ class MountFS(base.BaseFS):
         relative_link, link_subfs = self._map_path(link_name)
         relative_target, target_subfs = self._map_path(target)
         if target_subfs != link_subfs:
-            raise exceptions.FSError("Can't create cross-filesystem symlink from %r to %r."
-                    % (link_subfs, target_subfs))
+            raise exceptions.FSError(
+                "Can't create cross-filesystem symlink from %r to %r."
+                % (link_subfs, target_subfs)
+            )
         return link_subfs.symlink(relative_link, relative_target)
 
     # Delete
